@@ -12,7 +12,7 @@ import pandas as pd
 import re
 import urllib
 import pickle
-import query
+# import query
 import re
 
 
@@ -49,24 +49,37 @@ def get_game_details(title,driver,games_dict):
     rows = soup.findAll('tr')
     games_dict[title] = get_data_from_page(rows,games_dict)
     return 'done'
+
+def save_pickle(file_name,obj):
+    with open(file_name, 'wb') as handle:
+        pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    return file_name + ' is saved'
+
+def open_pickle(file_name):
+    with open(file_name, 'rb') as handle:
+        obj = pickle.load(handle)
+    return obj
     
 
-DB_CONNECTION = query.get_db_connection('../../../.supreme_db_creds.pkl','Sandbox_Elena_Morais',dbhost='centaur')
+# DB_CONNECTION = query.get_db_connection('../../../.supreme_db_creds.pkl','Sandbox_Elena_Morais',dbhost='centaur')
 
-all_tables = {}
+# all_tables = {}
 
-for region in ['USA','EU']:
-    for yr in range(2013,2021):
-        title = f'{region}_VGT_{yr}_Table_update'
-        all_tables[title] = query.return_table(DB_CONNECTION,'Sandbox_Elena_Morais',title)
+# for region in ['USA','EU']:
+#     for yr in range(2013,2021):
+#         title = f'{region}_VGT_{yr}_Table_update'
+#         all_tables[title] = query.return_table(DB_CONNECTION,'Sandbox_Elena_Morais',title)
 
-tabs = []
-for tab in all_tables.keys():
-    tabs.append(all_tables[tab][['title','publisher','franchise_update']])
+# tabs = []
+# for tab in all_tables.keys():
+#     tabs.append(all_tables[tab][['title','publisher','franchise_update']])
     
-full_table = pd.concat(tabs)
+# full_table = pd.concat(tabs)
 
-titles = list(set(full_table.title.to_list()))
+# titles = list(set(full_table.title.to_list()))
+# 
+
+titles = open_pickle('set_of_titles.pkl')
 
 games_dict = {}
 
